@@ -11,8 +11,8 @@ walkRight = [pygame.image.load('R1.png'),
              pygame.image.load('R6.png'),
              pygame.image.load('R7.png'),
              pygame.image.load('R8.png'),
-             pygame.image.load('R9.png')
-             ]
+             pygame.image.load('R9.png')]
+
 
 walkLeft = [pygame.image.load('L1.png'),
             pygame.image.load('L2.png'),
@@ -25,6 +25,7 @@ walkLeft = [pygame.image.load('L1.png'),
             pygame.image.load('L9.png')
             ]
 
+
 bg = pygame.image.load('bg.jpg')
 char = pygame.image.load('standing.png')
 
@@ -36,37 +37,37 @@ class player(object):
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 5
+        self.mov = 5
         self.isJump = False
         self.left = False
         self.right = False
         self.walkCount = 0
         self.jumpCount = 10
 
-    def draw(self, win):
+    def draw(self, window):
         if self.walkCount + 1 >= 27:
             self.walkCount = 0
 
         if self.left:
-            win.blit(walkLeft[self.walkCount // 3], (self.x, self.y))
+            window.blit(walkLeft[self.walkCount // 3], (self.x, self.y))
             self.walkCount += 1
         elif self.right:
-            win.blit(walkRight[self.walkCount // 3], (self.x, self.y))
+            window.blit(walkRight[self.walkCount // 3], (self.x, self.y))
             self.walkCount += 1
         else:
-            win.blit(char, (self.x, self.y))
+            window.blit(char, (self.x, self.y))
 
 
 def redrawGameWindow():
     window.blit(bg, (0, 0))
     man.draw(window)
-
     pygame.display.update()
 
 
-# mainloop
+
 man = player(200, 410, 64, 64)
 run = True
+
 while run:
     clock.tick(27)
 
@@ -76,25 +77,29 @@ while run:
 
     keys = pygame.key.get_pressed()
 
-    if keys[pygame.K_LEFT] and man.x > man.vel:
-        man.x -= man.vel
+    if keys[pygame.K_LEFT] and man.x > man.mov:
+        man.x -= man.mov
         man.left = True
         man.right = False
-    elif keys[pygame.K_RIGHT] and man.x < 500 - man.width - man.vel:
-        man.x += man.vel
+
+    elif keys[pygame.K_RIGHT] and man.x < 500 - man.mov - man.width:
+        man.x +=man.mov
+        man.left = False
         man.right = True
-        man.left = False
+
+
     else:
-        man.right = False
         man.left = False
+        man.right = False
         man.walkCount = 0
 
-    if not (man.isJump):
+    if not(man.isJump):
         if keys[pygame.K_SPACE]:
             man.isJump = True
-            man.right = False
             man.left = False
+            man.right = False
             man.walkCount = 0
+
     else:
         if man.jumpCount >= -10:
             neg = 1
@@ -105,6 +110,7 @@ while run:
         else:
             man.isJump = False
             man.jumpCount = 10
+
 
     redrawGameWindow()
 
